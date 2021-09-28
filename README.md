@@ -21,5 +21,5 @@ curl 'localhost:8080/v1/list'
 * `/v1/schema` - return the list of the db schemas
 * `/v1/tables` - return list of tables
 * `/v1/columns` - return list of columns for each table
-* `/v1/statistics` - return simple statistics for each column (max,min,avg)
+* `/v1/statistics` - return simple statistics for each column (max, min, avg, median)
 * `/v1/tableStatistics` - return simple statistics for each table about num of columns and num of records.

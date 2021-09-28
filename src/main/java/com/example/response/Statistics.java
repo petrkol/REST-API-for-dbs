@@ -18,11 +18,21 @@ public class Statistics {
 
   private String avg;
 
+  private Integer median;
+
   public Statistics() {
 
     this.column = null;
     this.table = null;
 
+  }
+
+  public Integer getMedian() {
+    return median;
+  }
+
+  public void setMedian(Integer median) {
+    this.median = median;
   }
 
   public Integer getColNum() {

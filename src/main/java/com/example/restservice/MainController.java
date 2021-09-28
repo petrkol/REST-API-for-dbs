@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import com.example.response.DBSchema;
 import com.example.response.Statistics;
 import com.example.utils.Constants;
+import com.example.utils.Util;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -132,12 +133,12 @@ public class MainController {
       ResultSet tables = meta.getTables(null, null, null, Constants.getColumnNameArray());
       // Prolez tabulky
       while (tables.next()) {
-        Statistics stats = new Statistics();
         String table = tables.getString(Constants.getTableName());
-        stats.setTable(table);
         ResultSet columns = meta.getColumns(null, null, table, "%");
         // prolez sloupce
         while (columns.next()) {
+          Statistics stats = new Statistics();
+          stats.setTable(table);
           String column = columns.getString(Constants.getColumnName());
           stats.setColumn(column);
           // Cela tahle sarada by se dala zabalit do nejakeho objektu, ktera ma na starost
@@ -146,17 +147,22 @@ public class MainController {
           // podobne i se schematy vyse
           statement.execute(String.format(Constants.getMaxTemplate(), column, table));
           ResultSet res = statement.getResultSet();
+          // pro median
+          String max = null;
+          String min = null;
           // nebude fungovat vsude, asi spravnejsi je si vzit Object a pokusit se to
           // nacastovat nebo jeste lip
           // odnekud brat info o datovem typu -> reflexe
           if (res.next())
-            stats.setMax(res.getString("max"));
+            max = res.getString("max");
+          stats.setMax(max);
           res.close();
 
           statement.execute(String.format(Constants.getMinTeplate(), column, table));
           res = statement.getResultSet();
           if (res.next())
-            stats.setMin(res.getString("min"));
+            min = res.getString("min");
+          stats.setMin(min);
           res.close();
 
           statement.execute(String.format(Constants.getAvgTemplate(), column, table));
@@ -164,6 +170,8 @@ public class MainController {
           if (res.next())
             stats.setAvg(res.getString("avg"));
           res.close();
+
+          stats.setMedian(Util.calculateMedian(min, max));
 
           retBuff.add(stats);
         }
