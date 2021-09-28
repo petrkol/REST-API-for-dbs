@@ -27,4 +27,5 @@ curl 'localhost:8080/v1/list'
 
 #### TODO
 
-The code could use more TLC mainly the code around the use od MySQL could be packaged into an object.
+1] The code could use more TLC mainly the code around the use od MySQL could be packaged into an object.
+1] Split response objects
