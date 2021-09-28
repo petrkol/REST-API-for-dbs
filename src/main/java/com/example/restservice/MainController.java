@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller // This means that this class is a Controller
-@RequestMapping(path = "/demo") // This means URL's start with /demo (after Application path)
+@Controller
+@RequestMapping(path = "/v1")
 public class MainController {
 
   @Autowired
@@ -63,7 +63,13 @@ public class MainController {
     return "Done";
   }
 
-  @GetMapping(path = "/all")
+  @PostMapping(path = "/delete")
+  public @ResponseBody String deleteConnection(@RequestParam Integer id) {
+    connectionRep.deleteById(id);
+    return "Done";
+  }
+
+  @GetMapping(path = "/list")
   public @ResponseBody Iterable<DBConnection> getAllConnections() {
     return connectionRep.findAll();
 

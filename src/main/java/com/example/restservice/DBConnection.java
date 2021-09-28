@@ -22,7 +22,7 @@ public class DBConnection {
 
   private String userName;
 
-  private String password; //TODO: sifrovani?
+  private String password; // by se sikla Base64
 
   public void setId(Integer id) {
     this.id = id;
