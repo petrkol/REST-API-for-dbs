@@ -2,7 +2,7 @@ package com.example.utils;
 
 public final class Constants {
 
-  private static String[] columnNameArray = {"TABLE"};
+  private static String[] columnNameArray = { "TABLE" };
 
   private static String tableName = "TABLE_NAME";
 
@@ -51,12 +51,12 @@ public final class Constants {
     return maxTemplate;
   }
 
-  public static String getMinTeplate() { 
+  public static String getMinTeplate() {
     return minTemplate;
   }
 
   public static String getAvgTemplate() {
     return avgTemplate;
   }
-  
+
 }

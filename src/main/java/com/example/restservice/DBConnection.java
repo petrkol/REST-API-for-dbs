@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 @Entity
 public class DBConnection {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;

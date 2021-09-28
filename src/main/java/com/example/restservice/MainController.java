@@ -2,8 +2,8 @@ package com.example.restservice;
 
 import javax.sql.DataSource;
 
-import com.example.objects.DBSchema;
-import com.example.objects.Statistics;
+import com.example.response.DBSchema;
+import com.example.response.Statistics;
 import com.example.utils.Constants;
 
 import java.sql.Connection;
@@ -123,85 +123,83 @@ public class MainController {
     return retBuff.iterator();
   }
 
-  @GetMapping(path="/statistics")
+  @GetMapping(path = "/statistics")
   public @ResponseBody Iterator<Statistics> getStatistics() throws SQLException {
     // StringBuffer retBuff = new StringBuffer();
     List<Statistics> retBuff = new ArrayList<Statistics>();
-    try (Connection con = dataSource.getConnection();
-        Statement statement = con.createStatement()
-        ) {
-          DatabaseMetaData meta = con.getMetaData();
-          ResultSet tables = meta.getTables(null, null, null, Constants.getColumnNameArray());
-          // Prolez tabulky
-          while(tables.next()) {
-            Statistics stats = new Statistics();
-            String table = tables.getString(Constants.getTableName());
-            stats.setTable(table);
-            ResultSet columns = meta.getColumns(null, null, table, "%");
-            // prolez sloupce
-            while(columns.next()) {
-              String column = columns.getString(Constants.getColumnName());
-              stats.setColumn(column);
-              // Cela tahle sarada by se dala zabalit do nejakeho objektu, ktera ma na starost vse kolem 
-              // pripojeni, fetch, odpojeni etc...
-              // podobne i se schematy vyse
-              statement.execute(String.format(Constants.getMaxTemplate(), column, table));
-              ResultSet res = statement.getResultSet();
-              // nebude fungovat vsude, asi spravnejsi je si vzit Object a pokusit se to nacastovat nebo jeste lip
-              // odnekud brat info o datovem typu -> reflexe
-              if(res.next())
-                stats.setMax(res.getString("max"));
-              res.close();
+    try (Connection con = dataSource.getConnection(); Statement statement = con.createStatement()) {
+      DatabaseMetaData meta = con.getMetaData();
+      ResultSet tables = meta.getTables(null, null, null, Constants.getColumnNameArray());
+      // Prolez tabulky
+      while (tables.next()) {
+        Statistics stats = new Statistics();
+        String table = tables.getString(Constants.getTableName());
+        stats.setTable(table);
+        ResultSet columns = meta.getColumns(null, null, table, "%");
+        // prolez sloupce
+        while (columns.next()) {
+          String column = columns.getString(Constants.getColumnName());
+          stats.setColumn(column);
+          // Cela tahle sarada by se dala zabalit do nejakeho objektu, ktera ma na starost
+          // vse kolem
+          // pripojeni, fetch, odpojeni etc...
+          // podobne i se schematy vyse
+          statement.execute(String.format(Constants.getMaxTemplate(), column, table));
+          ResultSet res = statement.getResultSet();
+          // nebude fungovat vsude, asi spravnejsi je si vzit Object a pokusit se to
+          // nacastovat nebo jeste lip
+          // odnekud brat info o datovem typu -> reflexe
+          if (res.next())
+            stats.setMax(res.getString("max"));
+          res.close();
 
-              statement.execute(String.format(Constants.getMinTeplate(), column, table));
-              res = statement.getResultSet();
-              if(res.next())
-                stats.setMin(res.getString("min"));
-              res.close();
+          statement.execute(String.format(Constants.getMinTeplate(), column, table));
+          res = statement.getResultSet();
+          if (res.next())
+            stats.setMin(res.getString("min"));
+          res.close();
 
-              statement.execute(String.format(Constants.getAvgTemplate(), column, table));
-              res = statement.getResultSet();
-              if(res.next())
-                stats.setAvg(res.getString("avg"));
-              res.close();
+          statement.execute(String.format(Constants.getAvgTemplate(), column, table));
+          res = statement.getResultSet();
+          if (res.next())
+            stats.setAvg(res.getString("avg"));
+          res.close();
 
-              retBuff.add(stats);
-            }
-          }    
+          retBuff.add(stats);
+        }
+      }
     }
     return retBuff.iterator();
   }
 
-  @GetMapping(path="/tableStatistics")
+  @GetMapping(path = "/tableStatistics")
   public @ResponseBody Iterator<Statistics> getTableStatistics() throws SQLException {
-      List<Statistics> retBuff = new ArrayList<Statistics>();
-      try(Connection con = dataSource.getConnection();
-          Statement statement = con.createStatement()) {
-        DatabaseMetaData meta = con.getMetaData();
-        ResultSet tables = meta.getTables(null, null, null, Constants.getColumnNameArray());
-        while(tables.next()) {
-          Statistics stats = new Statistics();
-          String table = tables.getString(Constants.getTableName());
-          stats.setTable(table);
-          //rows
-          statement.executeQuery(String.format(Constants.getRowNums(), table));
-          ResultSet cnt = statement.getResultSet();
-          if(cnt.next())
-            stats.setNumRecords(cnt.getInt("cnt"));
-          cnt.close();
-          // attrs
-          statement.execute(String.format(Constants.getColNums(), table));
-          cnt = statement.getResultSet();
-          Integer colNum = cnt.getMetaData().getColumnCount();
-          stats.setColNum(colNum);
-          cnt.close();
+    List<Statistics> retBuff = new ArrayList<Statistics>();
+    try (Connection con = dataSource.getConnection(); Statement statement = con.createStatement()) {
+      DatabaseMetaData meta = con.getMetaData();
+      ResultSet tables = meta.getTables(null, null, null, Constants.getColumnNameArray());
+      while (tables.next()) {
+        Statistics stats = new Statistics();
+        String table = tables.getString(Constants.getTableName());
+        stats.setTable(table);
+        // rows
+        statement.executeQuery(String.format(Constants.getRowNums(), table));
+        ResultSet cnt = statement.getResultSet();
+        if (cnt.next())
+          stats.setNumRecords(cnt.getInt("cnt"));
+        cnt.close();
+        // attrs
+        statement.execute(String.format(Constants.getColNums(), table));
+        cnt = statement.getResultSet();
+        Integer colNum = cnt.getMetaData().getColumnCount();
+        stats.setColNum(colNum);
+        cnt.close();
 
-
-          retBuff.add(stats);
-        }
-
+        retBuff.add(stats);
       }
-      return retBuff.iterator();
+
+    }
+    return retBuff.iterator();
   }
 
 }

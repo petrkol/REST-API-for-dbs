@@ -1,4 +1,4 @@
-package com.example.objects;
+package com.example.response;
 
 public class Statistics {
 
@@ -89,5 +89,4 @@ public class Statistics {
     this.column = columns;
   }
 
-  
 }

@@ -1,4 +1,4 @@
-package com.example.objects;
+package com.example.response;
 
 import java.util.*;
 
@@ -33,5 +33,4 @@ public class DBSchema {
     this.columns.add(column);
   }
 
-  
 }
