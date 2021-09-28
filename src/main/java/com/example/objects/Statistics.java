@@ -4,6 +4,12 @@ public class Statistics {
 
   private String table;
 
+  private Integer numRecords;
+
+  private Integer colNum;
+
+  private String[] attributes;
+
   private String column;
 
   private String max;
@@ -17,6 +23,30 @@ public class Statistics {
     this.column = null;
     this.table = null;
 
+  }
+
+  public Integer getColNum() {
+    return colNum;
+  }
+
+  public void setColNum(Integer colNum) {
+    this.colNum = colNum;
+  }
+
+  public String[] getAttributes() {
+    return attributes;
+  }
+
+  public void setAttributes(String[] attributes) {
+    this.attributes = attributes;
+  }
+
+  public Integer getNumRecords() {
+    return numRecords;
+  }
+
+  public void setNumRecords(Integer numRecords) {
+    this.numRecords = numRecords;
   }
 
   public String getAvg() {

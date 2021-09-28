@@ -166,22 +166,36 @@ public class MainController {
     return retBuff.iterator();
   }
 
-  public void showTables() throws SQLException {
-    DatabaseMetaData meta = dataSource.getConnection().getMetaData();
-    ResultSet tables = meta.getTables(null, null, null, Constants.getColumnNameArray());
-    while (tables.next()) {
-      String table = tables.getString(Constants.getTableName());
-      System.out.println(table);
-      ResultSet cols = meta.getColumns(null, null, table, "%");
-      while (cols.next()) {
+  @GetMapping(path="/tableStatistics")
+  public @ResponseBody Iterator<Statistics> getTableStatistics() throws SQLException {
+      List<Statistics> retBuff = new ArrayList<Statistics>();
+      try(Connection con = dataSource.getConnection();
+          Statement statement = con.createStatement()) {
+        DatabaseMetaData meta = con.getMetaData();
+        ResultSet tables = meta.getTables(null, null, null, Constants.getColumnNameArray());
+        while(tables.next()) {
+          Statistics stats = new Statistics();
+          String table = tables.getString(Constants.getTableName());
+          stats.setTable(table);
+          //rows
+          statement.executeQuery(String.format(Constants.getRowNums(), table));
+          ResultSet cnt = statement.getResultSet();
+          if(cnt.next())
+            stats.setNumRecords(cnt.getInt("cnt"));
+          cnt.close();
+          // attrs
+          statement.execute(String.format(Constants.getColNums(), table));
+          cnt = statement.getResultSet();
+          Integer colNum = cnt.getMetaData().getColumnCount();
+          stats.setColNum(colNum);
+          cnt.close();
+
+
+          retBuff.add(stats);
+        }
 
       }
-    }
-
+      return retBuff.iterator();
   }
 
-  // @GetMapping(path="/max")
-  // public @ResponseBody BigDecimal getMaxId() {
-  // return userRepository.findMaxUser();
-  // }
 }

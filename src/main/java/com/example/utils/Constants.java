@@ -16,7 +16,19 @@ public final class Constants {
 
   private static String avgTemplate = "SELECT AVG(%s) as avg FROM %s ;";
 
+  private static String rowNums = "SELECT COUNT(*) as cnt FROM %s ;";
+
+  private static String colNums = "SELECT * FROM %s LIMIT 1 ;";
+
   private Constants() {
+  }
+
+  public static String getColNums() {
+    return colNums;
+  }
+
+  public static String getRowNums() {
+    return rowNums;
   }
 
   public static String getSchemaName() {
