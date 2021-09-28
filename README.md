@@ -4,6 +4,7 @@ Provides a simple RESTful service for adding, updating, deleting and fetching re
 Server runs on Spring FW port 8080.
 
 #### How to run it locally
+
 One prerequisite is to have a ready MySQL db (locally or remotely) and set it in `application.properties` file. 
 
 ```bash
@@ -23,3 +24,7 @@ curl 'localhost:8080/v1/list'
 * `/v1/columns` - return list of columns for each table
 * `/v1/statistics` - return simple statistics for each column (max, min, avg, median)
 * `/v1/tableStatistics` - return simple statistics for each table about num of columns and num of records.
+
+#### TODO
+
+The code could use more TLC mainly the code around the use od MySQL could be packaged into an object.
